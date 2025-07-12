@@ -20,24 +20,18 @@ Ein TeamSpeak 3 Plugin, das ein verschiebbares "Always on Top" Fenster anzeigt, 
 
 ## 📥 Installation
 
-### Option 1: Vorkompilierte Version (Empfohlen)
+### Für Endnutzer
 
-1. Lade die neueste `mute_status_overlay.ts3_plugin` Datei aus den [Releases](https://github.com/harrisxo/mute-status-overlay/releases) herunter
-2. Kopiere die Datei in deinen TeamSpeak 3 Plugins-Ordner:
-   - Windows: `%APPDATA%\TS3Client\plugins\`
-3. Starte TeamSpeak 3 neu
-4. Das Plugin wird automatisch geladen und das Overlay-Fenster erscheint
+1. Lade die neueste `mute_status_overlay.ts3_plugin` Datei aus den [Releases](https://github.com/harrisxo/mute-status-overlay/releases) herunter.
+2. **Doppelklicke** die Datei. TeamSpeak 3 öffnet sich und fragt, ob du das Plugin installieren möchtest.
+3. Bestätige die Installation und starte TeamSpeak 3 ggf. neu.
 
-### Option 2: Selbst kompilieren
+### Für Entwickler
 
-1. Stelle sicher, dass du einen C++ Compiler installiert hast (z.B. MinGW-w64)
-2. Lade die TS3 SDK Header-Dateien herunter
-3. Führe folgende Befehle aus:
-
-```bash
-make
-make install
-```
+- Das Plugin wird mit Visual Studio (Windows) gebaut.
+- Öffne die Projektdatei und baue die DLL.
+- Erstelle das `.ts3_plugin` Paket mit dem offiziellen TeamSpeak Plugin SDK Tool.
+- Weitere Infos: [TeamSpeak Plugin SDK](https://github.com/TeamSpeak-Systems/ts3client-plugin_interface)
 
 
 ## 🎮 Verwendung
@@ -98,20 +92,6 @@ Das Plugin ist in C++ geschrieben und verwendet die offizielle TeamSpeak 3 Clien
 - `package.ini` - Plugin-Konfiguration
 - `Makefile` - Build-System
 - `resources/` - PNG-Icons für Mikrofon und Kopfhörer
-
-### Kompilierung:
-```bash
-make clean
-make
-```
-
-### Projektstruktur:
-```
-mute-status-overlay/
-├── mute_status_overlay.cpp    # Hauptquellcode
-├── package.ini               # Plugin-Konfiguration
-├── Makefile                  # Build-System
-├── resources/                # PNG-Icons
 │   ├── mic_active.png
 │   ├── mic_muted.png
 │   ├── headset_active.png
