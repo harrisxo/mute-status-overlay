@@ -22,7 +22,7 @@ Ein TeamSpeak 3 Plugin, das ein verschiebbares "Always on Top" Fenster anzeigt, 
 
 ### Option 1: Vorkompilierte Version (Empfohlen)
 
-1. Lade die neueste `mute_status_overlay.ts3_plugin` Datei aus den [Releases](https://github.com/yourusername/mute-status-overlay/releases) herunter
+1. Lade die neueste `mute_status_overlay.ts3_plugin` Datei aus den [Releases](https://github.com/harrisxo/mute-status-overlay/releases) herunter
 2. Kopiere die Datei in deinen TeamSpeak 3 Plugins-Ordner:
    - Windows: `%APPDATA%\TS3Client\plugins\`
 3. Starte TeamSpeak 3 neu
@@ -135,7 +135,7 @@ Bei Problemen oder Fragen:
 1. Überprüfe die [Troubleshooting](#-troubleshooting) Sektion
 2. Stelle sicher, dass du die neueste Version verwendest
 3. Überprüfe deine TeamSpeak 3 Version (Plugin ist für TS3 3.0+ entwickelt)
-4. Erstelle ein [GitHub Issue](https://github.com/yourusername/mute-status-overlay/issues)
+4. Erstelle ein [GitHub Issue](https://github.com/harrisxo/mute-status-overlay/issues)
 
 ## 🔗 Links
 
