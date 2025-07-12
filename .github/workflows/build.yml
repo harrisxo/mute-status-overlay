@@ -24,7 +24,6 @@ jobs:
         
     - name: Build documentation
       run: |
-        mkdir -p docs/_sidebar.md
         echo "- [Home](/)" > docs/_sidebar.md
         echo "- [Installation](/README.md#-installation)" >> docs/_sidebar.md
         echo "- [Usage](/README.md#-verwendung)" >> docs/_sidebar.md
