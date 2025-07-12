@@ -15,7 +15,7 @@ Ein TeamSpeak 3 Plugin, das ein verschiebbares "Always on Top" Fenster anzeigt, 
 - 📦 **Einfach zu installieren** - Einfache .ts3_plugin Datei
 - 🎨 **Transparenter Hintergrund** - Nur Icons und Text sind sichtbar
 - 📏 **Größenanpassung** - Ziehe die untere rechte Ecke zum Resizen
-- 🖼️ **PNG-Icons** - Schöne Icons für Mikrofon und Kopfhörer
+- 🖼️ **PNG-Icons** - Schöne Icons für Mikrofon und Kopfhörer.
 
 
 ## 📥 Installation
