@@ -4,18 +4,18 @@
 [![TeamSpeak 3](https://img.shields.io/badge/TeamSpeak-3.0+-blue.svg)](https://teamspeak.com)
 [![Windows](https://img.shields.io/badge/Windows-10%2B-green.svg)](https://www.microsoft.com/windows)
 
-Ein TeamSpeak 3 Plugin, das ein verschiebbares "Always on Top" Fenster anzeigt, welches den Mute-Status deines Mikrofons und Kopfhörers überwacht. Perfekt für Streamer, Content Creator und GTA RP Spieler!
+Ein TeamSpeak 3 Plugin, das ein verschiebbares "Always on Top" Fenster anzeigt, welches den Mute-Status deines Mikrofons und Kopfhörers überwacht. **Ab Version 1.1.0 zeigt das Overlay nur noch Icons – kein Text mehr!**
 
 ## ✨ Features
 
-- 🎯 **Always on Top Fenster** - Bleibt immer im Vordergrund
-- 🖱️ **Verschiebbar** - Klicke und ziehe das Fenster an die gewünschte Position
-- ⚡ **Echtzeit-Updates** - Zeigt sofort Änderungen des Mute-Status an
-- 🛡️ **EAC-kompatibel** - Keine externen Abhängigkeiten, nur Windows-APIs
-- 📦 **Einfach zu installieren** - Einfache .ts3_plugin Datei
-- 🎨 **Transparenter Hintergrund** - Nur Icons und Text sind sichtbar
-- 📏 **Größenanpassung** - Ziehe die untere rechte Ecke zum Resizen
-- 🖼️ **PNG-Icons** - Schöne Icons für Mikrofon und Kopfhörer.
+- **Always on Top Fenster** - Bleibt immer im Vordergrund
+- **Verschiebbar** - Klicke und ziehe das Fenster an die gewünschte Position
+- **Echtzeit-Updates** - Zeigt sofort Änderungen des Mute-Status an
+- **EAC-kompatibel** - Keine externen Abhängigkeiten, nur Windows-APIs
+- **Einfach zu installieren** - Einfache .ts3_plugin Datei
+- **Transparenter Hintergrund** - Nur Icons sind sichtbar (kein Text)
+- **Größenanpassung** - Ziehe die untere rechte Ecke zum Resizen
+- **PNG-Icons** - Schöne Icons für Mikrofon und Kopfhörer.
 
 
 ## 📥 Installation
@@ -24,7 +24,7 @@ Ein TeamSpeak 3 Plugin, das ein verschiebbares "Always on Top" Fenster anzeigt, 
 
 1. Lade die neueste `mute_status_overlay.ts3_plugin` Datei aus den [Releases](https://github.com/harrisxo/mute-status-overlay/releases) herunter.
 2. **Doppelklicke** die Datei. TeamSpeak 3 öffnet sich und fragt, ob du das Plugin installieren möchtest.
-3. Bestätige die Installation und starte TeamSpeak 3 ggf. neu.
+3. Bestätige die Installation und starte TeamSpeak 3 neu.
 
 ### Für Entwickler
 
@@ -39,9 +39,11 @@ Ein TeamSpeak 3 Plugin, das ein verschiebbares "Always on Top" Fenster anzeigt, 
 1. **Fenster verschieben**: Klicke und ziehe das Overlay-Fenster an die gewünschte Position
 2. **Größe anpassen**: Ziehe die untere rechte Ecke zum Resizen
 3. **Status anzeigen**: 
-   - 🔴 Rote Icons = Muted
-   - 🟢 Grüne Icons = Aktiv
+   - 🔴 Rotes Icon = Muted
+   - 🟢 Grünes Icon = Aktiv
 4. **Automatische Updates**: Das Fenster aktualisiert sich automatisch bei Mute-Status-Änderungen
+
+**Hinweis:** Ab Version 1.1 wird **kein Text** mehr angezeigt – nur noch die Icons!
 
 
 ## 🔧 Technische Details
@@ -69,17 +71,19 @@ Das Plugin ist vollständig EAC-kompatibel, da es:
 - Stelle sicher, dass das Plugin in TS3 aktiviert ist
 - Überprüfe, ob du mit einem TS3-Server verbunden bist
 - Starte TS3 neu
+- Die installierten Dateien sollten sich unter **\AppData\Roaming\TS3Client\plugins befinden
 
 **Fenster kann nicht verschoben werden:**
 - Stelle sicher, dass du auf das Fenster klickst (nicht auf andere Fenster)
 - Das Fenster sollte einen Mauszeiger anzeigen, wenn du darüber fährst
+- Am besten direkt auf eines der Icons klicken und halten
 
 **Status wird nicht aktualisiert:**
 - Überprüfe deine TS3-Audio-Einstellungen
 - Stelle sicher, dass du die richtigen Audio-Geräte ausgewählt hast
 
 **Icons werden nicht angezeigt:**
-- Stelle sicher, dass die PNG-Dateien im Plugin-Ordner vorhanden sind
+- Stelle sicher, dass die PNG-Dateien im Plugin-Ordner vorhanden sind (**\AppData\Roaming\TS3Client\plugins)
 - Überprüfe die Berechtigungen im TS3-Plugins-Ordner
 
 
@@ -107,7 +111,7 @@ Dieses Projekt steht unter der MIT-Lizenz - siehe die [LICENSE](LICENSE) Datei f
 
 ## 🤝 Beitragen
 
-Wir freuen uns über Beiträge! Bitte lies unsere [Contributing Guidelines](CONTRIBUTING.md) für Details.
+Ich freue mich über Feedback! Bitte lies die [Contributing Guidelines](CONTRIBUTING.md) für Details.
 
 ## 📞 Support
 
