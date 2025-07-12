@@ -1,0 +1,63 @@
+name: Build Plugin
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup MinGW-w64
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: MINGW64
+        update: true
+        
+    - name: Install dependencies
+      shell: msys2 {0}
+      run: |
+        pacman -S --noconfirm mingw-w64-x86_64-gcc
+        pacman -S --noconfirm mingw-w64-x86_64-make
+        
+    - name: Build plugin
+      shell: msys2 {0}
+      run: |
+        make clean
+        make
+        
+    - name: Create plugin package
+      shell: msys2 {0}
+      run: |
+        mkdir -p plugin_package/plugins
+        cp mute_status_overlay.dll plugin_package/plugins/
+        cp resources/*.png plugin_package/plugins/
+        cp package.ini plugin_package/
+        cd plugin_package
+        zip -r ../mute_status_overlay.ts3_plugin .
+        
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: mute-status-overlay-plugin
+        path: mute_status_overlay.ts3_plugin
+        retention-days: 30
+        
+    - name: Upload to release
+      if: github.event_name == 'release'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./mute_status_overlay.ts3_plugin
+        asset_name: mute_status_overlay.ts3_plugin
+        asset_content_type: application/octet-stream 

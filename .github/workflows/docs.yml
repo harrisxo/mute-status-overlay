@@ -1,0 +1,39 @@
+name: Deploy Documentation
+
+on:
+  push:
+    branches: [ main, master ]
+    paths: [ 'docs/**', 'README.md', 'CHANGELOG.md' ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Install dependencies
+      run: |
+        npm install -g docsify-cli
+        
+    - name: Build documentation
+      run: |
+        mkdir -p docs/_sidebar.md
+        echo "- [Home](/)" > docs/_sidebar.md
+        echo "- [Installation](/README.md#-installation)" >> docs/_sidebar.md
+        echo "- [Usage](/README.md#-verwendung)" >> docs/_sidebar.md
+        echo "- [Development](/README.md#-entwicklung)" >> docs/_sidebar.md
+        echo "- [Changelog](/CHANGELOG.md)" >> docs/_sidebar.md
+        
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs
+        publish_branch: gh-pages 
