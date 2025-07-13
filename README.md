@@ -46,6 +46,28 @@ Ein TeamSpeak 3 Plugin, das ein verschiebbares "Always on Top" Fenster anzeigt, 
 **Hinweis:** Ab Version 1.1 wird **kein Text** mehr angezeigt – nur noch die Icons!
 
 
+## 🗑️ Deinstallation
+
+### Methode 1: Über TeamSpeak (empfohlen)
+1. **TeamSpeak komplett schließen** (auch aus dem System-Tray)
+2. **TeamSpeak neu starten**
+3. **Extras → Optionen → Addons/Plugins**
+4. **Plugin finden und auf "Deinstallieren" klicken**
+
+### Methode 2: Manuell (falls Methode 1 nicht funktioniert)
+1. **TeamSpeak komplett schließen** (auch aus dem System-Tray)
+2. **Plugin-Ordner öffnen:**
+   ```
+   %APPDATA%\TeamSpeak 3 Client\plugins\
+   ```
+3. **Den Ordner `mute_status_overlay` löschen**
+
+### Wichtiger Hinweis
+Falls beim Deinstallieren über TeamSpeak die DLL-Datei im Plugin-Ordner bleibt, liegt das daran, dass sie noch von TeamSpeak geladen ist. In diesem Fall:
+- **TeamSpeak komplett schließen** und dann erneut deinstallieren
+- Oder **Methode 2** verwenden (manuell löschen)
+
+
 ## 🔧 Technische Details
 
 Das Plugin verwendet:
