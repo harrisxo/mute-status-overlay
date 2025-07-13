@@ -12,9 +12,9 @@ using namespace Gdiplus;
 
 // Plugin info
 static char* plugin_name = (char*)"Mute Status Overlay";
-static char* plugin_version = (char*)"1.0";
+static char* plugin_version = (char*)"1.3";
 static char* plugin_author = (char*)"Copyright (c) 2025 Aki Green // h710";
-static char* plugin_description = (char*)"Zeigt ein Overlay für den Mute-Status von Mikrofon und Kopfhörern.";
+static char* plugin_description = (char*)"Zeigt ein Overlay für den Mute-Status von Mikrofon und/oder Kopfhörern.";
 
 static struct TS3Functions ts3Functions;
 static HWND overlayWindow = NULL;
@@ -27,8 +27,8 @@ static uint64 currentScHandlerID = 0;
 // Overlay-Einstellungen
 // Setze overlayAlpha fest
 static int overlayAlpha = 180; // Immer halbtransparent
-static int overlayWidth = 200;
-static int overlayHeight = 80;
+static int overlayWidth = 120; // Breiter für zwei Icons
+static int overlayHeight = 64; // Höhe für ein Icon
 
 // --- Resize-Handle-Konstanten ---
 #define RESIZE_HANDLE_SIZE 18
@@ -68,8 +68,8 @@ std::string GetSettingsPath() {
 void LoadSettings() {
     std::string path = GetSettingsPath();
     overlayAlpha = GetPrivateProfileIntA(INI_SECTION, INI_KEY_ALPHA, 200, path.c_str());
-    overlayWidth = GetPrivateProfileIntA(INI_SECTION, INI_KEY_WIDTH, 200, path.c_str());
-    overlayHeight = GetPrivateProfileIntA(INI_SECTION, INI_KEY_HEIGHT, 80, path.c_str());
+    overlayWidth = GetPrivateProfileIntA(INI_SECTION, INI_KEY_WIDTH, 120, path.c_str());
+    overlayHeight = GetPrivateProfileIntA(INI_SECTION, INI_KEY_HEIGHT, 64, path.c_str());
     if (overlayAlpha < 50) overlayAlpha = 50;
     if (overlayAlpha > 255) overlayAlpha = 255;
     if (overlayWidth < 100) overlayWidth = 100;
@@ -101,8 +101,7 @@ using namespace Gdiplus;
 // --- UpdateLayeredWindow-Buffer zeichnen ---
 void RedrawOverlayWindow() {
     if (!overlayWindow) return;
-    RECT rect; GetClientRect(overlayWindow, &rect);
-    int w = rect.right, h = rect.bottom;
+    int w = overlayWidth, h = overlayHeight; // Dynamische Größe
     BITMAPINFO bmi = {0};
     bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
     bmi.bmiHeader.biWidth = w;
@@ -120,41 +119,26 @@ void RedrawOverlayWindow() {
     graphics.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
     // --- Alles transparent machen ---
     graphics.Clear(Gdiplus::Color(0,0,0,0));
-    // --- Skalierung berechnen ---
-    float scale = min(w / 120.0f, h / 80.0f);
-    int iconSize = (int)(32 * scale);
-    int iconYSpacing = (int)(8 * scale);
-    int textOffsetX = (int)(iconSize + 12 * scale);
-    int textOffsetY1 = (int)(8 * scale);
-    int textOffsetY2 = (int)(iconSize + iconYSpacing + 8 * scale);
-    // --- Mic-Icon ---
+    
+    // --- Beide Icons nebeneinander zeichnen ---
+    int iconSize = 48;
+    int spacing = 8; // Abstand zwischen den Icons
+    int totalWidth = iconSize * 2 + spacing;
+    int startX = (w - totalWidth) / 2;
+    int iconY = (h - iconSize) / 2;
+    
+    // --- Mikrofon-Icon (links) ---
     if (micActiveImg && micMutedImg) {
-        Gdiplus::Image* img = lastMicMuted ? micMutedImg : micActiveImg;
-        graphics.DrawImage(img, 10, textOffsetY1, iconSize, iconSize);
+        Gdiplus::Image* micImg = lastMicMuted ? micMutedImg : micActiveImg;
+        graphics.DrawImage(micImg, startX, iconY, iconSize, iconSize);
     }
-    // --- Headset-Icon ---
+    
+    // --- Headset-Icon (rechts) ---
     if (headsetActiveImg && headsetMutedImg) {
-        Gdiplus::Image* img = lastOutputMuted ? headsetMutedImg : headsetActiveImg;
-        graphics.DrawImage(img, 10, textOffsetY2, iconSize, iconSize);
+        Gdiplus::Image* headsetImg = lastOutputMuted ? headsetMutedImg : headsetActiveImg;
+        graphics.DrawImage(headsetImg, startX + iconSize + spacing, iconY, iconSize, iconSize);
     }
-    // --- Text ---
-    int fontSize = (int)(18 * scale);
-    if (fontSize < 8) fontSize = 8;
-    Gdiplus::FontFamily fontFamily(L"Arial");
-    Gdiplus::Font font(&fontFamily, (Gdiplus::REAL)fontSize, Gdiplus::FontStyleBold, Gdiplus::UnitPixel);
-    Gdiplus::SolidBrush brushMic(lastMicMuted ? Gdiplus::Color(255,255,60,60) : Gdiplus::Color(255,60,220,60));
-    Gdiplus::SolidBrush brushHeadset(lastOutputMuted ? Gdiplus::Color(255,255,60,60) : Gdiplus::Color(255,60,220,60));
-    graphics.DrawString(lastMicMuted ? L"MUTED" : L"Active", -1, &font, Gdiplus::PointF((Gdiplus::REAL)textOffsetX, (Gdiplus::REAL)(textOffsetY1 + iconSize/4)), &brushMic);
-    graphics.DrawString(lastOutputMuted ? L"MUTED" : L"Active", -1, &font, Gdiplus::PointF((Gdiplus::REAL)textOffsetX, (Gdiplus::REAL)(textOffsetY2 + iconSize/4)), &brushHeadset);
-    // --- Resize-Handle (Dreieck) ---
-    int handleSize = (int)(RESIZE_HANDLE_SIZE * scale);
-    Gdiplus::Point tri[3] = {
-        Gdiplus::Point(w, h),
-        Gdiplus::Point(w - handleSize, h),
-        Gdiplus::Point(w, h - handleSize)
-    };
-    Gdiplus::SolidBrush handleBrush(Gdiplus::Color(255,180,180,180));
-    graphics.FillPolygon(&handleBrush, tri, 3);
+    
     // --- Buffer als Fensterinhalt setzen ---
     POINT ptSrc = {0,0};
     SIZE sizeWnd = {w,h};
@@ -172,17 +156,6 @@ LRESULT CALLBACK OverlayWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
     switch (msg) {
         case WM_LBUTTONDOWN: {
             POINT pt = { LOWORD(lParam), HIWORD(lParam) };
-            RECT rect; GetClientRect(hwnd, &rect);
-            // Prüfen, ob im Resize-Handle geklickt wurde
-            if (pt.x >= rect.right - RESIZE_HANDLE_SIZE && pt.y >= rect.bottom - RESIZE_HANDLE_SIZE) {
-                isResizing = true;
-                resizeStartPt = pt;
-                resizeStartW = overlayWidth;
-                resizeStartH = overlayHeight;
-                SetCapture(hwnd);
-                return 0;
-            }
-            // Sonst: Drag
             isDragging = true;
             dragOffset.x = pt.x;
             dragOffset.y = pt.y;
@@ -190,15 +163,6 @@ LRESULT CALLBACK OverlayWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
             return 0;
         }
         case WM_MOUSEMOVE: {
-            if (isResizing) {
-                POINT pt = { LOWORD(lParam), HIWORD(lParam) };
-                int dx = pt.x - resizeStartPt.x;
-                int dy = pt.y - resizeStartPt.y;
-                overlayWidth = max(100, min(600, resizeStartW + dx));
-                overlayHeight = max(40, min(300, resizeStartH + dy));
-                ApplyOverlaySettings();
-                return 0;
-            }
             if (isDragging) {
                 POINT scrPt; GetCursorPos(&scrPt);
                 SetWindowPos(hwnd, NULL, scrPt.x - dragOffset.x, scrPt.y - dragOffset.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
@@ -207,12 +171,6 @@ LRESULT CALLBACK OverlayWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
             return 0;
         }
         case WM_LBUTTONUP:
-            if (isResizing) {
-                isResizing = false;
-                SaveSettings();
-                ReleaseCapture();
-                return 0;
-            }
             if (isDragging) {
                 isDragging = false;
                 ReleaseCapture();
@@ -235,7 +193,6 @@ LRESULT CALLBACK OverlayWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 
 void ApplyOverlaySettings() {
     if (overlayWindow) {
-        // SetLayeredWindowAttributes(overlayWindow, 0, overlayAlpha, LWA_ALPHA); // entfernt, damit nur noch der Hintergrund transparent ist
         SetWindowPos(overlayWindow, NULL, 0, 0, overlayWidth, overlayHeight, SWP_NOMOVE | SWP_NOZORDER);
         InvalidateRect(overlayWindow, NULL, TRUE);
     }
@@ -364,13 +321,13 @@ extern "C" {
         Gdiplus::GdiplusStartupInput gdiplusStartupInput;
         Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
         std::wstring pluginDir = GetPluginDir();
-        micActiveImg = new Gdiplus::Image((pluginDir + L"\\mic_active.png").c_str());
+        micActiveImg = new Gdiplus::Image((pluginDir + L"\\mute_status_overlay\\mic_active.png").c_str());
         if (micActiveImg->GetLastStatus() != Ok) MessageBoxA(NULL, "mic_active.png konnte nicht geladen werden!", "Fehler", MB_OK);
-        micMutedImg = new Gdiplus::Image((pluginDir + L"\\mic_muted.png").c_str());
+        micMutedImg = new Gdiplus::Image((pluginDir + L"\\mute_status_overlay\\mic_muted.png").c_str());
         if (micMutedImg->GetLastStatus() != Ok) MessageBoxA(NULL, "mic_muted.png konnte nicht geladen werden!", "Fehler", MB_OK);
-        headsetActiveImg = new Gdiplus::Image((pluginDir + L"\\headset_active.png").c_str());
+        headsetActiveImg = new Gdiplus::Image((pluginDir + L"\\mute_status_overlay\\headset_active.png").c_str());
         if (headsetActiveImg->GetLastStatus() != Ok) MessageBoxA(NULL, "headset_active.png konnte nicht geladen werden!", "Fehler", MB_OK);
-        headsetMutedImg = new Gdiplus::Image((pluginDir + L"\\headset_muted.png").c_str());
+        headsetMutedImg = new Gdiplus::Image((pluginDir + L"\\mute_status_overlay\\headset_muted.png").c_str());
         if (headsetMutedImg->GetLastStatus() != Ok) MessageBoxA(NULL, "headset_muted.png konnte nicht geladen werden!", "Fehler", MB_OK);
         LoadSettings();
         return 0;

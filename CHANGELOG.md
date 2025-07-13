@@ -5,6 +5,21 @@ Alle wichtigen Änderungen an diesem Projekt werden in dieser Datei dokumentiert
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/),
 und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 
+## [1.1.0] - 2024-07-12
+
+### Geändert
+- Overlay zeigt jetzt **nur noch Icons** (Mikrofon und Kopfhörer, jeweils aktiv/muted)
+- Jegliche Textanzeige im Overlay entfernt
+- Fenstergröße ist kompakter und passt sich nur an die Icons an
+
+## [1.3.0] - 2025-01-XX
+
+### Geändert
+- **Beide Icons (Mikrofon und Kopfhörer) werden wieder nebeneinander angezeigt**
+- Fenstergröße angepasst für optimale Darstellung beider Icons
+- Dynamische Fenstergröße basierend auf Icon-Anzahl und Abständen
+- Verbesserte Icon-Positionierung mit gleichmäßigen Abständen
+
 ## [Unreleased]
 
 ### Geplant

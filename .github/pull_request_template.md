@@ -25,4 +25,4 @@ Falls zutreffend, füge Screenshots hinzu, um deine Änderungen zu zeigen.
 - **TeamSpeak 3 Version:** [z.B. 3.6.2]
 
 ## 📋 Zusätzliche Informationen
-Füge hier weitere Informationen hinzu, die für die Review relevant sind. 
+Füge hier weitere Informationen hinzu, die für die Review relevant sind. /
